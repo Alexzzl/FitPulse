@@ -1341,14 +1341,43 @@ export function createApp(root) {
     registerScreen(screen);
   }
 
+  function readState() {
+    return {
+      focusId: focusEngine.getCurrentFocusId(),
+      route: router.getCurrentRoute(),
+      screenId: getScreenId(router.getCurrentRoute()),
+      ...state,
+    };
+  }
+
+  function setState(partialState = {}) {
+    stopAllTimers();
+    Object.assign(state, partialState);
+    render();
+    return readState();
+  }
+
+  function navigateTo(route, options = {}, partialState = null) {
+    stopAllTimers();
+    if (partialState && typeof partialState === "object") {
+      Object.assign(state, partialState);
+    }
+    router.navigate(route, options);
+    render();
+    return readState();
+  }
+
   return {
     getState() {
-      return {
-        focusId: focusEngine.getCurrentFocusId(),
-        route: router.getCurrentRoute(),
-        screenId: getScreenId(router.getCurrentRoute()),
-        ...state,
-      };
+      return readState();
+    },
+
+    navigateTo(route, options = {}, partialState = null) {
+      return navigateTo(route, options, partialState);
+    },
+
+    setState(partialState = {}) {
+      return setState(partialState);
     },
 
     start() {

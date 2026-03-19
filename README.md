@@ -34,6 +34,14 @@ FitPulse TV is a Samsung Tizen TV-oriented fitness web app built from the provid
   Copies the Tizen-ready app files into `dist/`.
 - `npm run preview`
   Serves the built `dist/` output at `http://127.0.0.1:4173`.
+- `npm run capture:store`
+  Generates the 4 Samsung Seller Office store screenshots into `store-screenshots/`.
+- `npm run capture:ui`
+  Generates the UI Description screenshots into `ui-description-screenshots/`.
+- `npm run ppt:fill`
+  Fills the Samsung UI Description PPT template and writes the output into `docs/outputs/`.
+- `npm run assets:seller`
+  Runs the store screenshots, UI screenshots, and PPT generation in sequence.
 
 ## Local preview note
 
@@ -52,3 +60,9 @@ The app currently targets `1920x1080` landscape TV layout.
 ## Packaging and publishing
 
 See `scripts/tizen-package.md` for packaging, testing on a TV, and Samsung TV Seller Office submission notes.
+
+Additional Seller Office materials for this project:
+
+- `docs/samsung-tv-seller-office-上线流程.md`
+- `docs/samsung-tv-seller-office-字段填写模板.md`
+- `docs/samsung-tv-ui-description-pptx-中文大纲.md`

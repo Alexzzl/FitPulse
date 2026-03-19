@@ -7,6 +7,10 @@
     "dev": "node scripts/serve.mjs . 5173",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs dist 4173",
-    "test": "node scripts/run-tests.mjs"
+    "test": "node scripts/run-tests.mjs",
+    "capture:store": "node tools/capture-store-screenshots.mjs",
+    "capture:ui": "node tools/capture-ui-description-screenshots.mjs",
+    "ppt:fill": "python tools/fill-app-description-ppt.py",
+    "assets:seller": "npm run capture:store && npm run capture:ui && npm run ppt:fill"
   }
 }
