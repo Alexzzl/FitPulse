@@ -10,8 +10,8 @@
   <content src="index.html"/>
   <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
   <tizen:application
-    id="RANDOMAPPID.FitPulseTV"
-    package="RANDOMAPPID"
+    id="Q6J4oKZfT7.FitPulseTV"
+    package="Q6J4oKZfT7"
     required_version="6.0"/>
   <tizen:profile name="tv"/>
   <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>

@@ -52,8 +52,8 @@ Do not double-click `index.html` from `dist/`. The app uses browser ES modules, 
 Before signing and uploading, replace these values in `config.xml`:
 
 - Widget ID: `http://yourdomain.com/fitpulse-tv`
-- Package ID: `RANDOMAPPID`
-- Application ID: `RANDOMAPPID.FitPulseTV`
+- Package ID: `Q6J4oKZfT7`
+- Application ID: `Q6J4oKZfT7.FitPulseTV`
 
 The app currently targets `1920x1080` landscape TV layout.
 
