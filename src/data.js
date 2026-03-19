@@ -1,17 +1,46 @@
+import {
+  getUserProgress,
+  getWorkoutHistory,
+  getWeeklyActivity,
+  formatNumber,
+  calculateBMI,
+} from "./progress-storage.js";
+
 const assets = "./assets/CodeBuddyAssets";
+
+// 加载存储的用户进度
+const storedProgress = getUserProgress();
+const storedHistory = getWorkoutHistory();
+const storedWeeklyActivity = getWeeklyActivity();
+
+// 格式化存储的数据
+const defaultUser = {
+  bmi: "22.9",
+  calories: "1,240",
+  goal: "Weight Loss",
+  height: "175 cm",
+  name: "corn",
+  totalCalories: "12,450",
+  weight: "70 kg",
+  workoutDays: "24",
+};
+
+// 如果有存储数据则使用，否则使用默认值
+const userProgress = storedProgress.totalWorkouts > 0 ? {
+  totalCalories: formatNumber(storedProgress.totalCalories),
+  totalWorkoutMinutes: storedProgress.totalWorkoutMinutes,
+  workoutDays: storedProgress.workoutDays,
+  currentStreak: storedProgress.currentStreak,
+} : null;
 
 export const appData = {
   assets,
-  user: {
-    bmi: "22.9",
-    calories: "1,240",
-    goal: "Weight Loss",
-    height: "175 cm",
-    name: "corn",
-    totalCalories: "12,450",
-    weight: "70 kg",
-    workoutDays: "24",
-  },
+  user: userProgress ? {
+    ...defaultUser,
+    totalCalories: formatNumber(userProgress.totalCalories),
+    workoutDays: userProgress.workoutDays.toString(),
+    calories: formatNumber(Math.round(userProgress.totalCalories / 10)),
+  } : defaultUser,
   home: {
     recommended: [
       {
@@ -42,13 +71,35 @@ export const appData = {
       timeLeft: "15 min left",
       title: "Full Body Power",
     },
-    weeklyActivity: [120, 245, 180, 300, 150, 320, 160],
+    weeklyActivity: storedWeeklyActivity[0] > 0 ? storedWeeklyActivity : [120, 245, 180, 300, 150, 320, 160],
   },
-  history: [
-    { calories: "159", day: "Today", title: "Full Body Blast" },
-    { calories: "230", day: "Yesterday", title: "HIIT Cardio" },
-    { calories: "188", day: "Mar 14", title: "Upper Body Strength" },
-  ],
+  history: storedHistory.length > 0 
+    ? storedHistory.slice(0, 5).map(entry => {
+        const date = new Date(entry.date);
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        let day;
+        if (date.toDateString() === today.toDateString()) {
+          day = "Today";
+        } else if (date.toDateString() === yesterday.toDateString()) {
+          day = "Yesterday";
+        } else {
+          day = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        }
+        
+        return {
+          calories: entry.calories.toString(),
+          day,
+          title: entry.title,
+        };
+      })
+    : [
+        { calories: "159", day: "Today", title: "Full Body Blast" },
+        { calories: "230", day: "Yesterday", title: "HIIT Cardio" },
+        { calories: "188", day: "Mar 14", title: "Upper Body Strength" },
+      ],
   library: {
     bodyParts: ["Arm", "Back", "Butt & Leg", "Chest", "Fullbody", "Shoulder"],
     picks: [

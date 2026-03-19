@@ -8,6 +8,14 @@ import {
 import { getRemoteActionFromKey, registerTizenKeys } from "./remote.js";
 import { getScreenId, createRouter } from "./router.js";
 import { getSidebarIconSet } from "./sidebar-icons.js";
+import { createWorkoutTimer, createCountdownTimer, parseTimeToSeconds } from "./workout-timer.js";
+import {
+  updateUserProgress,
+  addWorkoutHistory,
+  updateWeeklyActivity,
+  getDayOfWeek,
+  getUserProgress,
+} from "./progress-storage.js";
 
 function createActionMap(entries) {
   return new Map(entries.filter(([, action]) => typeof action === "function"));
@@ -134,6 +142,12 @@ export function createApp(root) {
     selectedBodyPart: "Fullbody",
     selectedDay: 5,
     workoutIndex: 0,
+    // 计时器相关状态
+    workoutTimer: null,
+    restTimer: null,
+    workoutStartTime: null,
+    currentWorkoutCalories: 0,
+    currentWorkoutDuration: 0,
   };
 
   let currentActions = new Map();
@@ -152,11 +166,17 @@ export function createApp(root) {
       return;
     }
 
+    // 退出运动页面时停止计时器
     if (
       currentRoute === "/workout/get-ready" ||
       currentRoute === "/workout/player" ||
       currentRoute === "/workout/rest"
     ) {
+      // 停止计时器（不保存进度，因为用户取消了运动）
+      stopAllTimers();
+      state.workoutStartTime = null;
+      state.currentWorkoutCalories = 0;
+      state.currentWorkoutDuration = 0;
       navigate("/plan/abs-of-steel/day/5", { replace: true });
       return;
     }
@@ -192,6 +212,11 @@ export function createApp(root) {
 
       if (action === "back") {
         goBack();
+        return;
+      }
+
+      if (action === "playPause" || action === "play" || action === "pause") {
+        handlePlayPause(action);
         return;
       }
 
@@ -248,6 +273,104 @@ export function createApp(root) {
         element.focus({ preventScroll: true });
       }
     });
+  }
+
+  // 处理播放/暂停
+  function handlePlayPause(action) {
+    const currentRoute = router.getCurrentRoute();
+    
+    if (currentRoute === "/workout/player") {
+      if (state.workoutTimer) {
+        if (action === "play" || (action === "playPause" && state.workoutTimer.isPaused())) {
+          state.workoutTimer.start();
+          updateTimerDisplay();
+        } else if (action === "pause" || (action === "playPause" && !state.workoutTimer.isPaused())) {
+          state.workoutTimer.pause();
+        }
+      }
+    } else if (currentRoute === "/workout/rest") {
+      if (state.restTimer) {
+        if (action === "play" || (action === "playPause" && state.restTimer.isPaused())) {
+          state.restTimer.start();
+          updateRestTimerDisplay();
+        } else if (action === "pause" || (action === "playPause" && !state.restTimer.isPaused())) {
+          state.restTimer.pause();
+        }
+      }
+    }
+  }
+
+  // 更新运动计时器显示
+  function updateTimerDisplay() {
+    const timerEl = document.querySelector(".player-metric");
+    if (timerEl && state.workoutTimer) {
+      timerEl.textContent = state.workoutTimer.getFormattedTime();
+    }
+  }
+
+  // 更新休息计时器显示
+  function updateRestTimerDisplay() {
+    const timerEl = document.querySelector(".rest-timer");
+    if (timerEl && state.restTimer) {
+      timerEl.textContent = state.restTimer.getFormattedTime();
+    }
+  }
+
+  // 停止所有计时器
+  function stopAllTimers() {
+    if (state.workoutTimer) {
+      state.workoutTimer.stop();
+      state.workoutTimer = null;
+    }
+    if (state.restTimer) {
+      state.restTimer.stop();
+      state.restTimer = null;
+    }
+  }
+
+  // 完成锻炼并保存进度
+  function completeWorkout() {
+    const calories = state.currentWorkoutCalories || 159;
+    const duration = state.currentWorkoutDuration || 20;
+    
+    // 更新用户进度
+    updateUserProgress(calories, duration);
+    
+    // 添加到历史记录
+    const exerciseNames = appData.workout.exercises.map(e => e.name).join(", ");
+    addWorkoutHistory({
+      title: `Full Body Power - Day ${state.selectedDay}`,
+      calories: calories,
+      duration: duration,
+    });
+    
+    // 更新每周活动
+    const dayOfWeek = getDayOfWeek();
+    updateWeeklyActivity(dayOfWeek, calories);
+    
+    // 重置本次运动数据
+    state.currentWorkoutCalories = 0;
+    state.currentWorkoutDuration = 0;
+  }
+
+  // 计算每次运动的卡路里和时长
+  function calculateWorkoutStats(exerciseMetric, exerciseIndex) {
+    // 解析时间或次数
+    const totalExercises = appData.workout.exercises.length;
+    const progress = (exerciseIndex + 1) / totalExercises;
+    
+    // 估算卡路里 (每次运动约10-15卡路里)
+    const estimatedCalories = Math.round(10 + Math.random() * 5);
+    state.currentWorkoutCalories = (state.currentWorkoutCalories || 0) + estimatedCalories;
+    
+    // 如果是时间格式，增加时长
+    if (exerciseMetric.includes(":")) {
+      const seconds = parseTimeToSeconds(exerciseMetric);
+      state.currentWorkoutDuration = (state.currentWorkoutDuration || 0) + Math.ceil(seconds / 60);
+    } else {
+      // 次数按每次30秒估算
+      state.currentWorkoutDuration = (state.currentWorkoutDuration || 0) + 0.5;
+    }
   }
 
   function registerScreen(screen) {
@@ -942,12 +1065,47 @@ export function createApp(root) {
     const focusId = "workout-next";
     const exercise = appData.workout.exercises[state.workoutIndex];
     const isLast = state.workoutIndex === appData.workout.exercises.length - 1;
+    const isTimeBased = exercise.metric.includes(":");
+    
+    // 如果是时间类型，创建计时器
+    if (isTimeBased && !state.workoutTimer) {
+      const seconds = parseTimeToSeconds(exercise.metric);
+      state.workoutTimer = createWorkoutTimer({
+        initialSeconds: seconds,
+        autoStart: true,
+        onTick: (formattedTime, remainingSeconds) => {
+          const timerEl = document.querySelector(".player-metric");
+          if (timerEl) {
+            timerEl.textContent = formattedTime;
+          }
+        },
+        onComplete: () => {
+          // 时间到，自动进入下一个
+          if (isLast) {
+            navigate("/workout/complete");
+          } else {
+            navigate("/workout/rest");
+          }
+        },
+      });
+      // 记录运动开始时间
+      if (!state.workoutStartTime) {
+        state.workoutStartTime = Date.now();
+      }
+    }
+
+    // 计算运动统计
+    calculateWorkoutStats(exercise.metric, state.workoutIndex);
 
     return {
       actions: createActionMap([
         [
           focusId,
           () => {
+            if (state.workoutTimer) {
+              state.workoutTimer.stop();
+              state.workoutTimer = null;
+            }
             if (isLast) {
               return "/workout/complete";
             }
@@ -968,6 +1126,9 @@ export function createApp(root) {
               </div>
               <div class="player-metric">${exercise.metric}</div>
             </div>
+            <div class="player-controls">
+              <span class="control-hint">Press Space or Play/Pause to control timer</span>
+            </div>
             <button type="button" class="ghost-button" data-focus-id="${focusId}">${isLast ? "Finish Workout" : "Next Exercise"}</button>
           </div>
         </section>
@@ -982,13 +1143,45 @@ export function createApp(root) {
     const addId = "rest-add";
     const skipId = "rest-skip";
     const nextExercise = appData.workout.exercises[state.workoutIndex + 1];
+    const REST_DURATION = 15;
+
+    // 如果没有休息计时器，创建一个
+    if (!state.restTimer) {
+      state.restTimer = createCountdownTimer(
+        REST_DURATION,
+        (formattedTime) => {
+          const timerEl = document.querySelector(".rest-timer");
+          if (timerEl) {
+            timerEl.textContent = formattedTime;
+          }
+        },
+        () => {
+          // 倒计时结束，自动进入下一个运动
+          state.workoutIndex = Math.min(state.workoutIndex + 1, appData.workout.exercises.length - 1);
+          state.restTimer = null;
+          navigate("/workout/player");
+        }
+      );
+    }
 
     return {
       actions: createActionMap([
-        [addId, null],
+        [
+          addId,
+          () => {
+            if (state.restTimer) {
+              state.restTimer.addTime(20);
+            }
+            return null;
+          },
+        ],
         [
           skipId,
           () => {
+            if (state.restTimer) {
+              state.restTimer.stop();
+              state.restTimer = null;
+            }
             state.workoutIndex = Math.min(state.workoutIndex + 1, appData.workout.exercises.length - 1);
             return "/workout/player";
           },
@@ -998,11 +1191,14 @@ export function createApp(root) {
         <section class="screen screen--centered">
           <div class="modal-card modal-card--rest">
             <span class="eyebrow">Rest</span>
-            <h1>00:15</h1>
+            <h1 class="rest-timer">00:${REST_DURATION.toString().padStart(2, "0")}</h1>
             <p>Coming up next: <span>${nextExercise?.name ?? "Finish"}</span></p>
             <div class="action-row">
               <button type="button" class="ghost-button" data-focus-id="${addId}">+20s</button>
               <button type="button" class="primary-button" data-focus-id="${skipId}">Skip Rest</button>
+            </div>
+            <div class="rest-controls">
+              <span class="control-hint">Press Space or Play/Pause to control</span>
             </div>
           </div>
         </section>
@@ -1030,12 +1226,38 @@ export function createApp(root) {
     const finishId = "workout-finish";
     const shareId = "workout-share";
 
+    // 停止所有计时器
+    stopAllTimers();
+    
+    // 计算实际运动时长
+    let workoutDuration = state.currentWorkoutDuration;
+    if (state.workoutStartTime) {
+      const elapsedMinutes = Math.round((Date.now() - state.workoutStartTime) / 60000);
+      workoutDuration = Math.max(workoutDuration, elapsedMinutes);
+    }
+    
+    // 计算卡路里
+    const calories = state.currentWorkoutCalories || Math.round(workoutDuration * 8);
+    
+    // 完成锻炼并保存进度
+    completeWorkout();
+
+    // 格式化时长显示
+    const durationStr = workoutDuration >= 60 
+      ? `${Math.floor(workoutDuration / 60)}:${(workoutDuration % 60).toString().padStart(2, "0")}`
+      : `${workoutDuration}:00`;
+    
+    const exerciseCount = appData.workout.exercises.length;
+
     return {
       actions: createActionMap([
         [
           finishId,
           () => {
             state.workoutIndex = 0;
+            state.workoutStartTime = null;
+            state.currentWorkoutCalories = 0;
+            state.currentWorkoutDuration = 0;
             return "/home";
           },
         ],
@@ -1048,9 +1270,9 @@ export function createApp(root) {
             <h1>Workout Complete!</h1>
             <p>Great job, ${appData.user.name}. You crushed it.</p>
             <div class="summary-grid">
-              <article class="panel summary-card"><span>CALORIES</span><strong>159</strong></article>
-              <article class="panel summary-card"><span>DURATION</span><strong>20:00</strong></article>
-              <article class="panel summary-card"><span>EXERCISES</span><strong>12</strong></article>
+              <article class="panel summary-card"><span>CALORIES</span><strong>${calories}</strong></article>
+              <article class="panel summary-card"><span>DURATION</span><strong>${durationStr}</strong></article>
+              <article class="panel summary-card"><span>EXERCISES</span><strong>${exerciseCount}</strong></article>
             </div>
             <div class="action-row">
               <button type="button" class="primary-button" data-focus-id="${finishId}">Finish</button>

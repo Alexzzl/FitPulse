@@ -9,6 +9,10 @@ const KEY_TO_ACTION = new Map([
   ["Escape", "back"],
   ["BrowserBack", "back"],
   ["XF86Back", "back"],
+  ["MediaPlayPause", "playPause"],
+  ["MediaPlay", "play"],
+  ["MediaPause", "pause"],
+  ["Space", "playPause"],
 ]);
 
 const KEYCODE_TO_ACTION = new Map([
@@ -20,6 +24,10 @@ const KEYCODE_TO_ACTION = new Map([
   [10009, "back"],
   [27, "back"],
   [8, "back"],
+  [19, "playPause"],   // Media Pause
+  [415, "play"],       // Media Play
+  [412, "pause"],      // Media Pause
+  [659, "playPause"],  // Tizen Media PlayPause
 ]);
 
 export function getRemoteActionFromKey(eventLike) {

@@ -835,6 +835,18 @@ button {
   font-weight: 900;
 }
 
+.player-controls,
+.rest-controls {
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.control-hint {
+  color: var(--muted);
+  font-size: 16px;
+  opacity: 0.7;
+}
+
 .progress-track {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
