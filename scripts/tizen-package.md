@@ -65,7 +65,7 @@ tizen package -t wgt -s <你的证书配置名> -- E:\code\workspace\FitPulse0\d
 
 下面这些是我根据你现在这个项目整理的提交稿，不是三星官方逐字模板。
 
-- App Name：`FitPulse TV`
+- App Name：`FitPulse`
 - Default Language：`English`
 - App Type：`TV Web App`
 - Category：以 Seller Office 实际下拉项为准，建议选最接近 Fitness / Health / Sports / Lifestyle 的类目。这里是基于应用内容的推断。
@@ -79,7 +79,7 @@ tizen package -t wgt -s <你的证书配置名> -- E:\code\workspace\FitPulse0\d
 
 ### Long Description 英文示例
 
-`FitPulse TV is a fitness experience designed for Samsung Smart TV. Users can browse workout plans, explore body-part-based training, continue daily routines, and navigate every screen with the TV remote. The app is optimized for large-screen viewing, simple directional focus movement, and fast access to guided home workouts.`
+`FitPulse is a fitness experience designed for Samsung Smart TV. Users can browse workout plans, explore body-part-based training, continue daily routines, and navigate every screen with the TV remote. The app is optimized for large-screen viewing, simple directional focus movement, and fast access to guided home workouts.`
 
 ## 6. QA 测试说明模板
 

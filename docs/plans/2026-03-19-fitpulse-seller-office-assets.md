@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** 为 FitPulse TV 生成三星 TV Seller Office 提审文档、自动截图工具和 UI Description PPT 生成脚本。
+**Goal:** 为 FitPulse 生成三星 TV Seller Office 提审文档、自动截图工具和 UI Description PPT 生成脚本。
 
 **Architecture:** 复用 MoneTV 已验证的 Seller Office 资料结构和无依赖 CDP 截图方式，但按 FitPulse 的页面流转、截图顺序和应用文案重写。PPT 继续基于三星模板填充，输出 FitPulse 专用的 UI Description。
 

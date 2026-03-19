@@ -867,7 +867,7 @@ export function createApp(root) {
       <div class="page-header">
         <div>
           <h1>Workout History</h1>
-          <p>Recent sessions completed on FitPulse TV.</p>
+          <p>Recent sessions completed on FitPulse.</p>
         </div>
       </div>
       <section class="history-list">

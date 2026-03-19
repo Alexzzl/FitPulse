@@ -1,6 +1,6 @@
-# FitPulse TV
+# FitPulse
 
-FitPulse TV is a Samsung Tizen TV-oriented fitness web app built from the provided Figma exports. It is implemented as a static modular web application so the source can be packaged directly into a `.wgt` without relying on a bundler at runtime.
+FitPulse is a Samsung Tizen TV-oriented fitness web app built from the provided Figma exports. It is implemented as a static modular web application so the source can be packaged directly into a `.wgt` without relying on a bundler at runtime.
 
 ## Included flows
 
@@ -51,9 +51,9 @@ Do not double-click `index.html` from `dist/`. The app uses browser ES modules, 
 
 Before signing and uploading, replace these values in `config.xml`:
 
-- Widget ID: `http://yourdomain.com/fitpulse-tv`
-- Package ID: `Q6J4oKZfT7`
-- Application ID: `Q6J4oKZfT7.FitPulseTV`
+- Widget ID: `http://yourdomain.com/fitpulse`
+- Package ID: `fpu1s26tv9`
+- Application ID: `fpu1s26tv9.FitPulse`
 
 The app currently targets `1920x1080` landscape TV layout.
 

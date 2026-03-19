@@ -1,6 +1,6 @@
-# FitPulse TV 的 Samsung TV UI Description PPT 中文大纲
+# FitPulse 的 Samsung TV UI Description PPT 中文大纲
 
-适用项目：`FitPulse TV`
+适用项目：`FitPulse`
 
 用途：用于 Seller Office 提交 `App UI Description` 的 `PPTX`
 
@@ -21,7 +21,7 @@
 - 核心流程怎么走
 - 是否需要登录、付费、特殊权限
 
-对 FitPulse TV，建议聚焦真实可用流程：
+对 FitPulse，建议聚焦真实可用流程：
 
 - Home
 - Library
@@ -59,7 +59,7 @@
 标题建议：
 
 ```text
-FitPulse TV
+FitPulse
 Samsung TV App UI Description
 ```
 
@@ -76,7 +76,7 @@ Seller: Your Company Name
 建议说明：
 
 ```text
-FitPulse TV is a fitness application designed for Samsung Smart TV.
+FitPulse is a fitness application designed for Samsung Smart TV.
 Users can browse recommended workouts, explore body-part-based training, open structured plans, and start guided home workout sessions with the TV remote.
 The app is optimized for large-screen viewing and directional focus navigation.
 ```
@@ -126,7 +126,7 @@ Users can browse workout content, open workout plans, start guided workout sessi
 说明建议：
 
 ```text
-The Home screen is the main dashboard of FitPulse TV.
+The Home screen is the main dashboard of FitPulse.
 It provides weekly activity, a resume workout card, and recommended workout content.
 Users can move focus with directional keys and open a workout with the Enter key.
 ```

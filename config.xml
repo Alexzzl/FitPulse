@@ -2,15 +2,15 @@
 <widget
   xmlns="http://www.w3.org/ns/widgets"
   xmlns:tizen="http://tizen.org/ns/widgets"
-  id="http://yourdomain.com/fitpulse-tv"
+  id="http://yourdomain.com/fitpulse"
   version="1.0.1"
   viewmodes="maximized">
-  <name>FitPulse TV</name>
+  <name>FitPulse</name>
   <icon src="icon.png"/>
   <content src="index.html"/>
   <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
   <tizen:application
-    id="fpu1s26tv9.FitPulseTV"
+    id="fpu1s26tv9.FitPulse"
     package="fpu1s26tv9"
     required_version="6.0"/>
   <tizen:profile name="tv"/>

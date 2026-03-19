@@ -1,6 +1,6 @@
-# FitPulse TV 在 seller.samsungapps.com 的上架流程
+# FitPulse 在 seller.samsungapps.com 的上架流程
 
-适用项目：`FitPulse TV`
+适用项目：`FitPulse`
 
 Seller Office 地址：
 <https://seller.samsungapps.com/>
@@ -25,7 +25,7 @@ Seller Office 地址：
 - `Public Seller`：只能发布美国。
 - `Partner Seller`：要发布美国以外国家或地区时，需要这个资格。
 
-所以 FitPulse TV 如果准备上欧洲、东南亚、中东、拉美等市场，前提是：
+所以 FitPulse 如果准备上欧洲、东南亚、中东、拉美等市场，前提是：
 
 1. 先开通 TV Seller Office。
 2. 再申请 `Partner Seller`。
@@ -75,7 +75,7 @@ npm run ppt:fill
 12. 上传 UI Description `PPTX`。
 13. 在 `Distribute` 页面提交认证。
 
-## 4. FitPulse TV 当前提审素材位置
+## 4. FitPulse 当前提审素材位置
 
 这些路径是本项目后续实际会用到的：
 
@@ -162,7 +162,7 @@ npm run ppt:fill
 - Seller Information
 - 地区合规材料
 
-对 FitPulse TV，建议特别检查：
+对 FitPulse，建议特别检查：
 
 - 是否真的有登录
 - 是否真的有付费
@@ -190,7 +190,7 @@ npm run ppt:fill
 - 遥控器操作说明
 - 如有限制条件，需要额外说明
 
-FitPulse TV 当前建议写法：
+FitPulse 当前建议写法：
 
 - 无需登录
 - 无需内购
@@ -218,7 +218,7 @@ UI Description 不完整，是三星 TV 应用被打回的高频原因。
 
 提交后如果被打回，通常会在 Seller Office 里看到 defect 或 review comment。
 
-## 6. FitPulse TV 这次最容易踩的坑
+## 6. FitPulse 这次最容易踩的坑
 
 ### 6.1 包内 ID 和商店信息不一致
 
@@ -232,7 +232,7 @@ UI Description 不完整，是三星 TV 应用被打回的高频原因。
 
 ### 6.2 焦点逻辑问题
 
-FitPulse TV 是强 TV 遥控器导向应用，审核时很容易测这些：
+FitPulse 是强 TV 遥控器导向应用，审核时很容易测这些：
 
 - 焦点是否会丢失
 - 焦点是否卡死

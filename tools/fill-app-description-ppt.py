@@ -13,13 +13,13 @@ from pptx.util import Inches, Pt
 
 
 ROOT = Path(__file__).resolve().parents[1]
-APP_NAME = os.environ.get("FITPULSE_APP_NAME", "FitPulse TV")
+APP_NAME = os.environ.get("FITPULSE_APP_NAME", "FitPulse")
 COMPANY_NAME = os.environ.get("FITPULSE_COMPANY_NAME", "Your Company Name")
 SUPPORT_EMAIL = os.environ.get("FITPULSE_SUPPORT_EMAIL", "your-support@example.com")
 SUPPORT_URL = os.environ.get("FITPULSE_SUPPORT_URL", "https://your-domain.example")
 SELLER_ADDRESS = os.environ.get("FITPULSE_SELLER_ADDRESS", "Your Address")
 OUTPUT_DIR = ROOT / "docs" / "outputs"
-OUTPUT = OUTPUT_DIR / "App_Description_FitPulse_TV_filled.pptx"
+OUTPUT = OUTPUT_DIR / "App_Description_FitPulse_filled.pptx"
 SCREENSHOT_DIR = ROOT / "store-screenshots"
 UI_DIR = ROOT / "ui-description-screenshots"
 
