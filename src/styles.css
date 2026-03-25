@@ -723,7 +723,8 @@ button {
 }
 
 .modal-card--rest,
-.modal-card--complete {
+.modal-card--complete,
+.modal-card--confirmation {
   width: min(100%, 980px);
 }
 
