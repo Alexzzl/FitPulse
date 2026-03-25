@@ -162,7 +162,9 @@ export function createApp(root) {
   function goBack() {
     const currentRoute = router.getCurrentRoute();
 
-    if (currentRoute === "/") {
+    // 在首页时显示退出确认对话框
+    if (currentRoute === "/" || currentRoute === "/home") {
+      showExitConfirmation();
       return;
     }
 
@@ -183,6 +185,83 @@ export function createApp(root) {
 
     router.back(currentRoute === "/profile-ready" ? "/" : "/home");
     render();
+  }
+
+  // 显示退出确认对话框
+  function showExitConfirmation() {
+    const screenId = "exit-confirmation";
+    const yesId = "exit-yes";
+    const noId = "exit-no";
+
+    const exitScreen = {
+      actions: new Map([
+        [yesId, () => exitApplication()],
+        [noId, () => closeExitConfirmation()]
+      ]),
+      html: `
+        <section class="screen screen--centered">
+          <div class="modal-card modal-card--confirmation">
+            <div class="modal-badge">⚠️</div>
+            <h1>Exit Application</h1>
+            <p>Do you want to exit FitPulse TV?</p>
+            <div class="action-row">
+              <button type="button" class="ghost-button" data-focus-id="${noId}">No</button>
+              <button type="button" class="primary-button" data-focus-id="${yesId}">Yes</button>
+            </div>
+          </div>
+        </section>
+      `,
+      nodes: [
+        {
+          id: noId,
+          isDefault: false,
+          neighbors: { right: yesId },
+          screenId
+        },
+        {
+          id: yesId,
+          isDefault: true,
+          neighbors: { left: noId },
+          screenId
+        }
+      ],
+      screenId
+    };
+
+    // 保存当前屏幕内容
+    state.previousScreen = root.innerHTML;
+    state.previousRoute = router.getCurrentRoute();
+
+    // 显示退出确认对话框
+    root.innerHTML = exitScreen.html;
+    registerScreen(exitScreen);
+  }
+
+  // 关闭退出确认对话框
+  function closeExitConfirmation() {
+    if (state.previousRoute) {
+      navigate(state.previousRoute);
+    } else {
+      render();
+    }
+  }
+
+  // 退出应用程序
+  function exitApplication() {
+    // 停止所有计时器
+    stopAllTimers();
+
+    // 调用三星TV的退出API
+    try {
+      if (globalThis.tizen && globalThis.tizen.application) {
+        globalThis.tizen.application.getCurrentApplication().exit();
+      } else {
+        // 在非tizen环境中的后备方案（如浏览器测试）
+        console.log("Application exit requested");
+      }
+    } catch (error) {
+      console.error("Failed to exit application:", error);
+    }
   }
 
   function executeAction(focusId) {
