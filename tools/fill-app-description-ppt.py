@@ -308,6 +308,7 @@ def main() -> None:
             "5. Review the workout summary on the Day Detail screen.",
             "6. Start the workout and continue through the workout player flow.",
             "7. Return to previous screens with the Back key.",
+            "8. Exit application from home screen with confirmation dialog.",
             "",
             "No account sign-in, activation, or purchase is required in the current release.",
         ],
@@ -349,6 +350,7 @@ def main() -> None:
             "Classic Programs: structured plan cards for long-form training.",
             "Plan Calendar: day selection for a multi-day workout plan.",
             "History: previous completed sessions.",
+            "Exit Confirmation: exit dialog displayed when pressing back on home screen.",
             "",
             "Only currently implemented screens and functions are described in this document.",
         ],
@@ -366,6 +368,7 @@ def main() -> None:
         [
             "Standard Samsung TV navigation behavior is used in the current release.",
             "The app focuses on directional focus movement and Back key behavior.",
+            "Updated return key policy now includes exit confirmation on home screen.",
         ],
         font_size=18,
     )
@@ -375,7 +378,7 @@ def main() -> None:
         ("ENTER", "Select the focused card, button, or action", "Standard selection behavior"),
         ("UP / DOWN", "Move focus vertically", "Stops at the screen edge"),
         ("LEFT / RIGHT", "Move focus horizontally", "Stops at the screen edge"),
-        ("BACK / RETURN", "Go to the previous screen", "Standard Samsung TV behavior"),
+        ("BACK / RETURN", "Go to previous screen or show exit confirmation", "Exit dialog on home screen"),
         ("PLAY / PAUSE", "Control timer-based workout flow when applicable", "Current workout flow only"),
         ("EXIT", "Close the application", "Standard Samsung TV behavior"),
         ("COLOR KEYS", "N/R", "No custom key mapping"),
