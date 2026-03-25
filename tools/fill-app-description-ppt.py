@@ -27,6 +27,7 @@ UI_DIR = ROOT / "ui-description-screenshots"
 def resolve_template() -> Path:
     candidates = [
         os.environ.get("FITPULSE_PPT_TEMPLATE"),
+        ROOT / "docs" / "App_Description_template_eng_v.1.42.pptx",
         ROOT / "App_Description_template_eng_v.1.42.pptx",
         ROOT.parent / "MoneTV" / "App_Description_template_eng_v.1.42.pptx",
     ]
