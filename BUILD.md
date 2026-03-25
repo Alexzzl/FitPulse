@@ -54,8 +54,8 @@ FitPulse/
 # 进入项目目录
 cd FitPulse
 
-# 使用 Tizen CLI 创建 wgt 安装包
-tizen package -w -t wgt -- ./FitnessApp.wgt
+# 使用 Tizen CLI 创建并签名 wgt 安装包
+tizen package -t wgt -s SamsungTV -- ./FitnessApp.wgt
 ```
 
 ### 方式三：手动创建 ZIP
