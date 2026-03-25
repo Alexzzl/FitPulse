@@ -112,6 +112,124 @@ npm run build
 - 遥控器操作：方向键和确认键正常工作 ✅
 ```
 
+## 🆕 What's New in This Version
+
+```
+FitPulse TV v1.0.2 Update Summary:
+
+### Key Improvements
+- **Exit Confirmation**: Added exit confirmation dialog when pressing back key on home page to prevent accidental exits
+- **Compliance Fix**: Implemented return key policy that meets Samsung TV app development guidelines
+- **UX Enhancement**: Added remote control navigation support for better user experience
+
+### Feature Details
+- New exit confirmation dialog on home page
+- Optimized application exit flow
+- Enhanced remote control operation experience
+- Automatic resource cleanup to prevent memory leaks
+
+### Issues Fixed
+- Fixed return key policy compliance issues that caused previous Samsung review rejection
+- Ensured application can successfully pass Samsung TV app store review
+
+---
+
+FitPulse TV v1.0.2 更新内容：
+
+### 主要改进
+- **退出确认功能**：在首页按返回键时显示退出确认对话框，防止误操作
+- **合规性修复**：符合三星TV应用开发指南的返回键策略要求
+- **用户体验优化**：支持遥控器导航操作，界面更加友好
+
+### 功能详情
+- 新增首页退出确认对话框
+- 优化应用退出流程
+- 改进遥控器操作体验
+- 自动清理资源防止内存泄漏
+
+### 修复问题
+- 修复了之前版本中返回键策略不符合三星审核要求的问题
+- 确保应用能够正常通过三星TV应用商店审核
+```
+
+## 🧪 Note for Tester
+
+```
+Notes for Tester:
+
+### Key Testing Items
+1. **Return Key Functionality Test**
+   - Exit confirmation dialog must appear when pressing back key on home page
+   - Confirmation dialog must have clear "Yes/No" options
+   - Application should exit normally when selecting "Yes"
+   - Should return to home page when selecting "No"
+
+2. **Remote Control Operation Test**
+   - Confirmation dialog must support left/right arrow keys for option switching
+   - Enter/OK key should correctly execute the selected action
+   - Test display effects at different resolutions
+
+3. **Other Page Return Test**
+   - Ensure return key functionality works normally on non-home pages
+   - Exercise page return key should stop timer and return to plan page
+   - Verify page navigation logic is correct
+
+4. **Edge Case Testing**
+   - Test behavior when pressing return key multiple times consecutively
+   - Verify behavior when pressing return key during loading states
+   - Check if Tizen API calls are correct
+
+### Testing Environment Requirements
+- Must be tested on Tizen emulator or real device
+- Verify remote control button responses
+- Ensure no crashes occur in non-Tizen environments
+
+### Acceptance Criteria
+- [ ] Home page return key shows confirmation dialog
+- [ ] Exit functionality works correctly
+- [ ] Remote control navigation works properly
+- [ ] Original functionality remains unaffected
+- [ ] Complies with Samsung TV development guidelines
+
+---
+
+测试人员注意事项：
+
+### 重点测试项目
+1. **返回键功能测试**
+   - 在首页按返回键必须显示退出确认对话框
+   - 确认对话框必须有清晰的"是/否"选项
+   - 选择"是"后应用应正常退出
+   - 选择"否"后应返回首页
+
+2. **遥控器操作测试**
+   - 确认对话框支持左右方向键切换选项
+   - 确认键应能正确执行选择的操作
+   - 测试在不同分辨率下的显示效果
+
+3. **其他页面返回测试**
+   - 确保非首页的返回键功能正常
+   - 运动页面的返回键应停止计时器并返回计划页
+   - 验证页面导航逻辑正确
+
+4. **边界情况测试**
+   - 测试连续多次按返回键的情况
+   - 验证在加载状态下按返回键的行为
+   - 检查tizen API调用是否正确
+
+### 测试环境要求
+- 必须在Tizen模拟器或真机上测试
+- 验证遥控器按键响应
+- 确保在非tizen环境下不会崩溃
+
+### 验收标准
+- [ ] 首页返回键显示确认对话框
+- [ ] 退出功能正常工作
+- [ ] 遥控器导航正常
+- [ ] 原有功能未受影响
+- [ ] 符合三星TV开发指南要求
+```
+
 ## ⚠️ 注意事项
 
 ### 常见审核失败原因
