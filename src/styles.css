@@ -881,6 +881,87 @@ button {
   border-color: rgba(96, 165, 250, 0.88);
 }
 
+/* Network Error Popup */
+.network-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.network-popup.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.network-popup__content {
+  width: min(100%, 640px);
+  padding: 48px 56px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, #1a1a1f, #141419);
+  text-align: center;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(251, 146, 60, 0.3);
+}
+
+.network-popup__icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 24px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fb923c, #ea580c);
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  color: white;
+  box-shadow: 0 12px 32px rgba(251, 146, 60, 0.35);
+}
+
+.network-popup__title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--warning);
+}
+
+.network-popup__message {
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1.45;
+  margin: 16px 0 36px;
+}
+
+.network-popup__button {
+  appearance: none;
+  min-width: 200px;
+  min-height: 68px;
+  padding: 0 48px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fb923c, #ea580c);
+  color: white;
+  font-size: 26px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(251, 146, 60, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.network-popup__button:hover,
+.network-popup__button:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(251, 146, 60, 0.4);
+  outline: none;
+}
+
 @media (max-width: 1280px) {
   .home-hero,
   .detail-grid,

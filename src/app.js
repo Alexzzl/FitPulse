@@ -16,6 +16,7 @@ import {
   getDayOfWeek,
   getUserProgress,
 } from "./progress-storage.js";
+import { initNetworkMonitor } from "./network-monitor.js";
 
 function createActionMap(entries) {
   return new Map(entries.filter(([, action]) => typeof action === "function"));
@@ -1459,10 +1460,11 @@ export function createApp(root) {
       return setState(partialState);
     },
 
-    start() {
-      registerTizenKeys();
-      bindEvents();
-      render();
-    },
+  start() {
+    registerTizenKeys();
+    bindEvents();
+    initNetworkMonitor();
+    render();
+  },
   };
 }
