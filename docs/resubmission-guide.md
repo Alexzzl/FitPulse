@@ -280,6 +280,94 @@ node scripts/build.mjs --verbose
 
 ---
 
-**最后更新时间**：2026年3月25日
-**适用版本**：FitPulse TV v1.0.1
-**审核状态**：已修复返回键策略问题
+---
+
+## 🔧 v1.0.4 修复内容 (2026-05-27 审核被拒)
+
+### 缺陷清单
+
+本次审核在 **12 个 TV 型号**（Tizen 9.0 和 10.0）上被拒，共 **24 个缺陷**：
+
+| 缺陷 | 严重等级 | 状态 |
+|------|---------|------|
+| [TR][Playback][VPN/Out network][ATSC] Network error does not remain on screen | B | 已修复 |
+| [TR][Basic Fuction][VPN/Out network][ATSC] TTS works in the app | B | 已修复 |
+
+### 修复 1：网络错误弹窗保持显示
+
+**问题**：在 VPN/断网场景下，网络错误弹窗在 8 秒后自动消失，审核要求错误提示必须保持在屏幕上直到用户手动关闭。
+
+**修复文件**：[src/network-monitor.js](../src/network-monitor.js)
+
+**修改内容**：
+- 移除 `POPUP_AUTO_HIDE_DELAY` 常量（8 秒自动隐藏定时器）
+- 移除 `hideTimeout` 变量
+- 移除 `resetAutoHide()` 函数
+- 移除 `showNetworkErrorPopup()` 和 `hideNetworkErrorPopup()` 中对自动隐藏的所有调用
+- 网络错误弹窗现在会**一直保持显示**，直到用户按 OK 按钮或点击关闭
+
+### 修复 2：TTS 支持声明
+
+**问题**：`config.xml` 中声明 `tts-support="disable"`，但 Tizen 系统的 TTS（屏幕阅读器）仍会朗读应用文本内容。三星审核指南要求：如果 TTS 在应用中实际可用，必须声明为 `enable`。
+
+**修复文件**：[config.xml](../config.xml)
+
+**修改内容**：
+- 第 17 行：`tts-support="disable"` → `tts-support="enable"`
+
+### 涉及的 TV 型号
+
+| 型号 | Tizen 版本 | 网络错误 | TTS |
+|------|-----------|---------|-----|
+| 26TV_PREMIUM2 | 10.0 | ✅ | ✅ |
+| 26TV_PREMIUM1 | 10.0 | ✅ | ✅ |
+| 26TV_BASIC1 | 10.0 | ✅ | ✅ |
+| 25TV_STANDARD1 | 9.0 | ✅ | ✅ |
+| 25TV_PREMIUM4 | 9.0 | ✅ | ✅ |
+| 25TV_PREMIUM3 | 9.0 | ✅ | ✅ |
+| 25TV_PREMIUM2 | 9.0 | ✅ | ✅ |
+| 25TV_PREMIUM1 | 9.0 | ✅ | ✅ |
+| 25TV_BASIC3 | 9.0 | ✅ | ✅ |
+| 25TV_BASIC2 | 9.0 | ✅ | ✅ |
+| 25TV_BASIC1 | 9.0 | ✅ | ✅ |
+
+### v1.0.4 审核说明建议
+
+```
+本次更新修复了 2026-05-27 审核被拒的 2 个问题：
+
+1. 网络错误弹窗保持显示
+   - 移除了网络错误弹窗的 8 秒自动隐藏定时器
+   - 断网时错误弹窗将一直保持显示，直到用户手动确认关闭
+   - 符合三星 TV 应用的错误提示规范
+
+2. TTS 支持声明修正
+   - 将 config.xml 中的 tts-support 从 disable 改为 enable
+   - 应用内容可被系统 TTS 正确朗读
+   - 符合三星 TV 应用的辅助功能规范
+
+测试验证：
+- VPN/断网场景：网络错误弹窗保持显示 ✅
+- TTS：系统屏幕阅读器可正常朗读应用内容 ✅
+```
+
+### What's New in v1.0.4
+
+```
+FitPulse TV v1.0.4 Update Summary:
+
+### Bug Fixes
+- **Network Error Popup**: Fixed an issue where the network error popup would auto-dismiss after 8 seconds. The popup now remains on screen until the user manually dismisses it.
+- **TTS Support**: Updated config.xml to properly declare TTS support as enabled, ensuring compliance with Samsung TV accessibility guidelines.
+
+### Issues Fixed
+- Fixed 24 defects across 12 TV models (Tizen 9.0 & 10.0)
+- Network error popup now complies with Samsung TV error display requirements
+- TTS accessibility declaration now matches actual app behavior
+```
+
+---
+
+**最后更新时间**：2026年6月1日
+**适用版本**：FitPulse TV v1.0.4
+**审核状态**：已修复网络错误弹窗和TTS声明问题

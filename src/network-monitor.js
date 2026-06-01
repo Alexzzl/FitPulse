@@ -5,8 +5,6 @@
 
 let isNetworkOnline = true;
 let popupElement = null;
-let hideTimeout = null;
-const POPUP_AUTO_HIDE_DELAY = 8000; // 8 seconds auto-hide
 
 /**
  * Check if network is currently online
@@ -33,7 +31,6 @@ function checkNetworkStatus() {
 function showNetworkErrorPopup() {
   // Prevent duplicate popups
   if (popupElement) {
-    resetAutoHide();
     return;
   }
 
@@ -66,9 +63,6 @@ function showNetworkErrorPopup() {
     okButton.focus();
   }, 100);
 
-  // Auto-hide after delay
-  resetAutoHide();
-
   // Trigger animation
   requestAnimationFrame(() => {
     popupElement.classList.add("is-visible");
@@ -81,9 +75,6 @@ function showNetworkErrorPopup() {
 function hideNetworkErrorPopup() {
   if (!popupElement) return;
 
-  clearTimeout(hideTimeout);
-  hideTimeout = null;
-
   popupElement.classList.remove("is-visible");
 
   // Remove after animation completes
@@ -93,16 +84,6 @@ function hideNetworkErrorPopup() {
     }
     popupElement = null;
   }, 300);
-}
-
-/**
- * Reset the auto-hide timer
- */
-function resetAutoHide() {
-  clearTimeout(hideTimeout);
-  hideTimeout = setTimeout(() => {
-    hideNetworkErrorPopup();
-  }, POPUP_AUTO_HIDE_DELAY);
 }
 
 /**
