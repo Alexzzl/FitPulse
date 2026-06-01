@@ -350,20 +350,73 @@ node scripts/build.mjs --verbose
 - VPN/断网场景：网络错误弹窗保持显示 ✅
 - TTS：系统屏幕阅读器可正常朗读应用内容 ✅
 ```
+### Defect Resolve 表单填写
 
-### What's New in v1.0.4
+#### 缺陷 1: [TR][Playback][VPN/Out network][ATSC] Network error does not remain on screen
 
+**1. Defect Cause:** App Defect
+
+**2. Solution Type:** Fixed
+
+**3. Solution Explanation:**
 ```
-FitPulse TV v1.0.4 Update Summary:
+The network error popup was configured to auto-dismiss after 8 seconds (POPUP_AUTO_HIDE_DELAY timer in src/network-monitor.js), which caused the error message to disappear without user acknowledgment. This did not meet the Samsung TV requirement that error notifications must remain visible until the user manually dismisses them.
 
-### Bug Fixes
-- **Network Error Popup**: Fixed an issue where the network error popup would auto-dismiss after 8 seconds. The popup now remains on screen until the user manually dismisses it.
-- **TTS Support**: Updated config.xml to properly declare TTS support as enabled, ensuring compliance with Samsung TV accessibility guidelines.
+Fix applied in src/network-monitor.js:
+- Removed the 8-second auto-hide timer (POPUP_AUTO_HIDE_DELAY constant, hideTimeout variable, and resetAutoHide() function)
+- The network error popup now stays on screen persistently until the user presses the OK button or selects dismiss via remote control
+- No changes to popup display logic or network detection mechanism — only the auto-dismiss behavior was removed
 
-### Issues Fixed
-- Fixed 24 defects across 12 TV models (Tizen 9.0 & 10.0)
-- Network error popup now complies with Samsung TV error display requirements
-- TTS accessibility declaration now matches actual app behavior
+Verification: Tested on VPN/out-of-network scenario — the network error popup remains on screen and only dismisses when the user presses OK.
+```
+
+#### 缺陷 2: [TR][Basic Fuction][VPN/Out network][ATSC] TTS works in the app
+
+**1. Defect Cause:** App Defect
+
+**2. Solution Type:** Fixed
+
+**3. Solution Explanation:**
+```
+The config.xml manifest declared tts-support="disable", but the Tizen system-level TTS (screen reader) was still able to read the app's text content aloud. Samsung TV app review guidelines require that if TTS functionality works within the app, the manifest must correctly declare tts-support="enable" to reflect the actual behavior.
+
+Fix applied in config.xml:
+- Changed tts-support="disable" to tts-support="enable" on line 17 of the tizen:setting element
+- No code changes required — the app's text content is already compatible with system TTS, and the manifest now correctly reflects this
+
+Verification: The app's UI text elements (buttons, labels, headings) are properly structured and can be read by the Tizen system TTS engine. The config.xml declaration now matches the actual app behavior.
+```
+
+### Seller Office 提交字段
+
+#### What's new in this version (面向用户)
+```
+What's new in this version:
+
+- The network error notification now remains on screen until you dismiss it, ensuring you never miss important connection alerts.
+- Improved accessibility support for on-screen text reading.
+```
+
+#### Note for Tester (面向审核人员)
+```
+Note for Tester:
+
+1. Network Error Popup - Persistent Display
+   - Disconnect the device from the network (or use VPN to simulate network loss) during video playback
+   - Verify that the "Network Disconnected" popup appears and remains on screen
+   - Verify the popup does NOT auto-dismiss after any time period
+   - Press OK on the remote control to dismiss the popup
+   - Verify the popup dismisses correctly after user confirmation
+
+2. TTS (Text-to-Speech) Support Declaration
+   - Verify that config.xml declares tts-support="enable"
+   - Enable system TTS (screen reader) on the TV
+   - Navigate through the app screens
+   - Verify on-screen text elements (buttons, labels, headings) are readable by the system TTS engine
+   - No change to actual TTS behavior — only the manifest declaration was corrected
+
+Testing Environment: Tizen TV (9.0 / 10.0), VPN/out-of-network conditions
+Affected Models: 26TV_PREMIUM2, 26TV_PREMIUM1, 26TV_BASIC1 (Tizen 10.0); 25TV_STANDARD1, 25TV_PREMIUM4, 25TV_PREMIUM3, 25TV_PREMIUM2, 25TV_PREMIUM1, 25TV_BASIC3, 25TV_BASIC2, 25TV_BASIC1 (Tizen 9.0)
 ```
 
 ---
