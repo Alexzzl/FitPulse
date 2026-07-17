@@ -32,7 +32,7 @@ function createSidebarItems() {
 }
 
 function routeForSidebar(route) {
-  if (route === "/history") {
+  if (route === "/history" || route === "/settings") {
     return "/me";
   }
 
@@ -149,6 +149,7 @@ export function createApp(root) {
     workoutStartTime: null,
     currentWorkoutCalories: 0,
     currentWorkoutDuration: 0,
+    exitConfirmationOpen: false,
   };
 
   let currentActions = new Map();
@@ -161,6 +162,11 @@ export function createApp(root) {
   }
 
   function goBack() {
+    if (state.exitConfirmationOpen) {
+      closeExitConfirmation();
+      return;
+    }
+
     const currentRoute = router.getCurrentRoute();
 
     // 在首页时显示退出确认对话框
@@ -190,6 +196,10 @@ export function createApp(root) {
 
   // 显示退出确认对话框
   function showExitConfirmation() {
+    if (state.exitConfirmationOpen) {
+      return;
+    }
+
     const screenId = "exit-confirmation";
     const yesId = "exit-yes";
     const noId = "exit-no";
@@ -232,6 +242,7 @@ export function createApp(root) {
     // 保存当前屏幕内容
     state.previousScreen = root.innerHTML;
     state.previousRoute = router.getCurrentRoute();
+    state.exitConfirmationOpen = true;
 
     // 显示退出确认对话框
     root.innerHTML = exitScreen.html;
@@ -240,6 +251,8 @@ export function createApp(root) {
 
   // 关闭退出确认对话框
   function closeExitConfirmation() {
+    state.exitConfirmationOpen = false;
+
     if (state.previousRoute) {
       navigate(state.previousRoute);
     } else {
@@ -926,7 +939,7 @@ export function createApp(root) {
 
     const actions = createActionMap([
       [historyId, () => "/history"],
-      [settingsId, null],
+      [settingsId, () => "/settings"],
       [
         soundId,
         () => {
@@ -937,6 +950,65 @@ export function createApp(root) {
     ]);
 
     return withSidebar(screenId, content, nodes, actions, historyId, true);
+  }
+
+  function buildSettingsScreen() {
+    const screenId = "settings";
+    const soundId = "settings-sound";
+    const backId = "settings-back";
+
+    const content = `
+      <header class="page-header page-header--compact">
+        <div>
+          <p class="eyebrow">Preferences</p>
+          <h1>Settings</h1>
+        </div>
+      </header>
+      <section class="settings-list" aria-label="Application settings">
+        <button type="button" class="panel settings-row" data-focus-id="${soundId}">
+          <span>
+            <strong>Workout Sound</strong>
+            <small>Audio cues during guided workouts</small>
+          </span>
+          <span class="settings-value">${state.audioOn ? "On" : "Off"}</span>
+        </button>
+        <button type="button" class="panel settings-row" data-focus-id="${backId}">
+          <span>
+            <strong>Back to Profile</strong>
+            <small>Return to the Me menu</small>
+          </span>
+          <span class="settings-value">Return</span>
+        </button>
+      </section>
+    `;
+
+    const nodes = [
+      {
+        id: soundId,
+        isDefault: true,
+        neighbors: { down: backId, left: "settings-nav-me" },
+        screenId,
+      },
+      {
+        id: backId,
+        isDefault: false,
+        neighbors: { up: soundId, left: "settings-nav-me" },
+        screenId,
+      },
+    ];
+
+    const actions = createActionMap([
+      [
+        soundId,
+        () => {
+          state.audioOn = !state.audioOn;
+          render();
+        },
+      ],
+      [backId, () => "/me"],
+    ]);
+
+    return withSidebar(screenId, content, nodes, actions, soundId, true);
   }
 
   function buildHistoryScreen() {
@@ -1393,6 +1465,8 @@ export function createApp(root) {
         return buildClassicScreen();
       case "/me":
         return buildProfileScreen();
+      case "/settings":
+        return buildSettingsScreen();
       case "/history":
         return buildHistoryScreen();
       case "/plan/abs-of-steel":

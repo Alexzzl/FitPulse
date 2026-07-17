@@ -61,6 +61,7 @@ run("router maps screen ids and tracks history", () => {
 
   assert.equal(getScreenId("/classic"), "classic");
   assert.equal(getScreenId("/workout/rest"), "rest");
+  assert.equal(getScreenId("/settings"), "settings");
 
   router.navigate("/home");
   router.navigate("/library");

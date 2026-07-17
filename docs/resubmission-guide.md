@@ -424,3 +424,32 @@ Affected Models: 26TV_PREMIUM2, 26TV_PREMIUM1, 26TV_BASIC1 (Tizen 10.0); 25TV_ST
 **最后更新时间**：2026年6月1日
 **适用版本**：FitPulse TV v1.0.4
 **审核状态**：已修复网络错误弹窗和TTS声明问题
+
+## v1.0.5 Basic Function 复审修复说明
+
+### Settings button in the Me menu does not respond
+
+**Defect Cause:** App Defect
+**Solution Type:** Fixed
+
+```text
+The Settings button was visible and focusable, but its action handler was not connected to a destination. The button now opens a functional Settings screen. Users can toggle workout sound and return to the Me screen using either the on-screen action or the remote Return key.
+```
+
+### Return key does not close the exit popup
+
+**Defect Cause:** App Defect
+**Solution Type:** Fixed
+
+```text
+The Return key previously entered the general page-back handler while the exit confirmation popup was open, causing the popup to be recreated. The popup now has explicit modal state. Pressing Return while it is visible closes the popup and restores the underlying page without exiting the application.
+```
+
+### TTS works in the app
+
+**Defect Cause:** App Description
+**Solution Type:** Content/metadata corrected
+
+```text
+FitPulse does not invoke a text-to-speech API or start speech output itself. Text can be read when the Samsung TV system screen reader is enabled by the user. The application manifest declares tts-support="enable", and the Seller Office application description and self-check answers must declare this system-level TTS compatibility consistently.
+```

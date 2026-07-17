@@ -5,6 +5,7 @@ const ROUTE_TO_SCREEN = new Map([
   ["/library", "library"],
   ["/classic", "classic"],
   ["/me", "profile"],
+  ["/settings", "settings"],
   ["/history", "history"],
   ["/plan/abs-of-steel", "plan-calendar"],
   ["/plan/abs-of-steel/day/5", "day-detail"],

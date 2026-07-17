@@ -3,7 +3,7 @@
   xmlns="http://www.w3.org/ns/widgets"
   xmlns:tizen="http://tizen.org/ns/widgets"
   id="http://yourdomain.com/fitpulse"
-  version="1.0.4"
+  version="1.0.5"
   viewmodes="maximized">
   <name>FitPulse</name>
   <icon src="icon.png"/>
