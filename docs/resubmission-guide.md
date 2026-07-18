@@ -427,29 +427,95 @@ Affected Models: 26TV_PREMIUM2, 26TV_PREMIUM1, 26TV_BASIC1 (Tizen 10.0); 25TV_ST
 
 ## v1.0.5 Basic Function 复审修复说明
 
-### Settings button in the Me menu does not respond
+### Defect 1: Settings button in "Me" menu does not work
 
 **Defect Cause:** App Defect
 **Solution Type:** Fixed
+**Solution Explanation:**
 
 ```text
-The Settings button was visible and focusable, but its action handler was not connected to a destination. The button now opens a functional Settings screen. Users can toggle workout sound and return to the Me screen using either the on-screen action or the remote Return key.
+The Settings button in the "Me" menu was not correctly connected to the Settings screen navigation.
+
+The issue has been fixed by:
+- Adding a valid action handler for the Settings button
+- Mapping the button to the /settings route
+- Adding and registering the Settings screen in the application router
+- Ensuring the Settings screen supports remote-control focus navigation
+
+Verification:
+Opened the sidebar, navigated to "Me", selected the Settings button, and confirmed that the Settings screen opened successfully and allowed the user to adjust preferences.
 ```
 
-### Return key does not close the exit popup
+### Defect 2: Return key does not close Exit pop up
 
 **Defect Cause:** App Defect
 **Solution Type:** Fixed
+**Solution Explanation:**
 
 ```text
-The Return key previously entered the general page-back handler while the exit confirmation popup was open, causing the popup to be recreated. The popup now has explicit modal state. Pressing Return while it is visible closes the popup and restores the underlying page without exiting the application.
+The Return key handler did not correctly dismiss the Exit confirmation pop-up while the pop-up was displayed.
+
+The issue has been fixed by:
+- Detecting whether the Exit confirmation pop-up is currently open
+- Handling the Samsung TV Return key code (10009)
+- Closing the pop-up instead of reopening it or leaving it on screen
+- Restoring the previous Home screen and focus state after dismissal
+
+Verification:
+Pressed the Return key on the Home screen to open the Exit confirmation pop-up, then pressed Return again. The pop-up closed successfully and the application returned to the previous screen.
 ```
 
-### TTS works in the app
+### Defect 3: TTS works in the app
 
-**Defect Cause:** App Description
-**Solution Type:** Content/metadata corrected
+**Defect Cause:** App Defect
+**Solution Type:** Fixed
+**Solution Explanation:**
 
 ```text
-FitPulse does not invoke a text-to-speech API or start speech output itself. Text can be read when the Samsung TV system screen reader is enabled by the user. The application manifest declares tts-support="enable", and the Seller Office application description and self-check answers must declare this system-level TTS compatibility consistently.
+The application does not provide or invoke any Text-to-Speech API or application-level speech output. TTS support was incorrectly declared in the application manifest.
+
+The issue has been fixed by:
+- Changing the Tizen manifest setting from tts-support="enable" to tts-support="disable"
+- Confirming that the application does not call any TTS or speech-synthesis API
+- Keeping application audio limited to workout-related sound preferences
+
+Verification:
+Reviewed the application code and manifest configuration and confirmed that the application does not implement application-level TTS functionality. The manifest now declares tts-support="disable".
+```
+
+### Enter Release Information / What's New
+
+```text
+This release improves navigation and remote-control behavior:
+
+- Fixed an issue where the Settings button in the "Me" menu did not open the Settings screen.
+- Fixed an issue where pressing the Return key did not close the Exit confirmation pop-up.
+- Updated the application manifest to disable TTS support because the application does not provide application-level Text-to-Speech functionality.
+- Improved focus handling and screen navigation for Samsung TV remote controls.
+```
+
+### Note for Tester (include what's new)
+
+```text
+What's New:
+
+1. Settings Navigation
+- Open the application.
+- Navigate to the "Me" menu from the sidebar.
+- Select the Settings button.
+- Verify that the Settings screen opens successfully.
+- Verify that the available preferences can be selected using the remote control.
+
+2. Exit Pop-up Return Key
+- Navigate to the Home screen.
+- Press the Return key to open the Exit confirmation pop-up.
+- Press the Return key again while the pop-up is displayed.
+- Verify that the pop-up closes and the application returns to the Home screen.
+
+3. TTS Configuration
+- The application does not implement or invoke any application-level Text-to-Speech API.
+- The Tizen manifest has been updated to declare tts-support="disable".
+- Verify that no application-generated speech is started while navigating through the application.
+
+The application is designed for directional navigation using the Samsung TV remote control. No login or test account is required.
 ```
